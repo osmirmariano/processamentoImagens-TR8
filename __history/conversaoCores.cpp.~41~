@@ -1,0 +1,103 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "conversaoCores.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+	Form1->Color = clWhite;
+	ComboBox1->Items->Add("RGB para CMY");
+	ComboBox1->Items->Add("CMY para RGB");
+	ComboBox1->Items->Add("RGB para HSI");
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm1::SpeedButton1Click(TObject *Sender)
+{
+	Image1->Picture->LoadFromFile("bears.bmp"); // Carregando imagem
+	Image1->Stretch = true; //redimensiona
+	Image1->Refresh(); //atualiza
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TForm1::ComboBox1Change(TObject *Sender)
+{
+	AnsiString conversao;
+	conversao = ComboBox1->Text;
+	int i, j, r, g, b;
+	float c, m, y;
+	float **matriz;
+
+	if(conversao == "RGB para CMY"){
+		for(i = 0; i < Image1->Width; i++){
+			for(j = 0; j < Image1->Height; j++){
+				cor = Image1->Canvas->Pixels[i][j];
+				r = GetRValue(cor);
+				g = GetGValue(cor);
+				b = GetBValue(cor);
+				ShowMessage(RGB(r,g,b));
+				ShowMessage(r);
+				ShowMessage(g);
+				ShowMessage(b);
+
+				c = (1-(float)(r/255));
+				m = (1-(float)(g/255));
+				y = (1-(float)(b/255));
+
+				ShowMessage(c);
+				ShowMessage(m);
+				ShowMessage(y);
+				Image1->Canvas->Pixels[i][j] = RGB(c,m,y);
+			}
+		}
+	}
+	else{
+		if(conversao == "CMY para RGB"){
+			for(i = 0; i < Image1->Width; i++){
+				for(j = 0; j < Image1->Height; j++){
+					cor = Image1->Canvas->Pixels[i][j];
+					r = GetRValue(cor);
+					g = GetGValue(cor);
+					b = GetBValue(cor);
+
+                    ShowMessage(r);
+					ShowMessage(g);
+					ShowMessage(b);
+
+					c = 1 - (r/255);
+					m = 1 - (g/255);
+					y = 1 - (b/255);
+					ShowMessage(c);
+					ShowMessage(m);
+					ShowMessage(y);
+
+					r = (1 - c)*255;
+					g = (1 - m)*255;
+					b = (1 - y)*255;
+
+					ShowMessage(r);
+					ShowMessage(g);
+					ShowMessage(b);
+					Image1->Canvas->Pixels[i][j] = RGB(r,g,b);
+				}
+			}
+		}
+		else{
+			if(conversao == "RGB para HSI"){
+
+            }
+
+		}
+    }
+
+}
+//---------------------------------------------------------------------------
+
